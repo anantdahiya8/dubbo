@@ -127,7 +127,7 @@ public class URLParam {
                 throw new IllegalArgumentException();
             }
         }
-        this.EXTRA_PARAMS = Collections.unmodifiableMap((extraParams == null ? new HashMap<>() : new HashMap<>(extraParams)));
+        this.EXTRA_PARAMS = Collections.unmodifiableMap((extraParams == null ? new LinkedHashMap<>() : new LinkedHashMap<>(extraParams)));
         this.METHOD_PARAMETERS = Collections.unmodifiableMap((methodParameters == null) ? Collections.emptyMap() : new LinkedHashMap<>(methodParameters));
         this.rawParam = rawParam;
 
@@ -138,7 +138,7 @@ public class URLParam {
     protected URLParam(BitSet key, int[] value, Map<String, String> extraParams, Map<String, Map<String, String>> methodParameters, String rawParam) {
         this.KEY = key;
         this.VALUE = value;
-        this.EXTRA_PARAMS = Collections.unmodifiableMap((extraParams == null ? new HashMap<>() : new HashMap<>(extraParams)));
+        this.EXTRA_PARAMS = Collections.unmodifiableMap((extraParams == null ? new LinkedHashMap<>() : new LinkedHashMap<>(extraParams)));
         this.METHOD_PARAMETERS = Collections.unmodifiableMap((methodParameters == null) ? Collections.emptyMap() : new LinkedHashMap<>(methodParameters));
         this.rawParam = rawParam;
         this.timestamp = System.currentTimeMillis();
@@ -209,7 +209,7 @@ public class URLParam {
     }
 
     public static Map<String, Map<String, String>> initMethodParameters(Map<String, String> parameters) {
-        Map<String, Map<String, String>> methodParameters = new HashMap<>();
+        Map<String, Map<String, String>> methodParameters = new LinkedHashMap<>();
         if (parameters == null) {
             return methodParameters;
         }
@@ -555,15 +555,15 @@ public class URLParam {
             if (keyIndex < 0) {
                 // entry key is not present in DynamicParamTable, add it to EXTRA_PARAMS
                 if (newExtraParams == null) {
-                    newExtraParams = new HashMap<>(EXTRA_PARAMS);
+                    newExtraParams = new LinkedHashMap<>(EXTRA_PARAMS);
                 }
                 newExtraParams.put(entry.getKey(), entry.getValue());
                 String[] methodSplit = entry.getKey().split("\\.");
                 if (methodSplit.length == 2) {
                     if (newMethodParams == null) {
-                        newMethodParams = new HashMap<>(METHOD_PARAMETERS);
+                        newMethodParams = new LinkedHashMap<>(METHOD_PARAMETERS);
                     }
-                    Map<String, String> methodMap = newMethodParams.computeIfAbsent(methodSplit[1], (k) -> new HashMap<>());
+                    Map<String, String> methodMap = newMethodParams.computeIfAbsent(methodSplit[1], (k) -> new LinkedHashMap<>());
                     methodMap.put(methodSplit[0], entry.getValue());
                 }
             } else {
@@ -618,7 +618,7 @@ public class URLParam {
     }
 
     private Map<Integer, Integer> recoverValue() {
-        Map<Integer, Integer> map = new HashMap<>((int) (KEY.size() / 0.75) + 1);
+        Map<Integer, Integer> map = new LinkedHashMap<>((int) (KEY.size() / 0.75) + 1);
         for (int i = KEY.nextSetBit(0), offset = 0; i >= 0; i = KEY.nextSetBit(i + 1)) {
             map.put(i, VALUE[offset++]);
         }
@@ -684,14 +684,14 @@ public class URLParam {
             }
             if (EXTRA_PARAMS.containsKey(key)) {
                 if (newExtraParams == null) {
-                    newExtraParams = new HashMap<>(EXTRA_PARAMS);
+                    newExtraParams = new LinkedHashMap<>(EXTRA_PARAMS);
                 }
                 newExtraParams.remove(key);
 
                 String[] methodSplit = key.split("\\.");
                 if (methodSplit.length == 2) {
                     if (newMethodParams == null) {
-                        newMethodParams = new HashMap<>(METHOD_PARAMETERS);
+                        newMethodParams = new LinkedHashMap<>(METHOD_PARAMETERS);
                     }
                     Map<String, String> methodMap = newMethodParams.get(methodSplit[1]);
                     if (CollectionUtils.isNotEmptyMap(methodMap)) {
@@ -948,9 +948,9 @@ public class URLParam {
 
         int capacity = (int) (parts.length / .75f) + 1;
         BitSet keyBit = new BitSet(capacity);
-        Map<Integer, Integer> valueMap = new HashMap<>(capacity);
-        Map<String, String> extraParam = new HashMap<>(capacity);
-        Map<String, Map<String, String>> methodParameters = new HashMap<>(capacity);
+        Map<Integer, Integer> valueMap = new LinkedHashMap<>(capacity);
+        Map<String, String> extraParam = new LinkedHashMap<>(capacity);
+        Map<String, Map<String, String>> methodParameters = new LinkedHashMap<>(capacity);
 
         for (String part : parts) {
             part = part.trim();
@@ -989,9 +989,9 @@ public class URLParam {
         if (CollectionUtils.isNotEmptyMap(params)) {
             int capacity = (int) (params.size() / .75f) + 1;
             BitSet keyBit = new BitSet(capacity);
-            Map<Integer, Integer> valueMap = new HashMap<>(capacity);
-            Map<String, String> extraParam = new HashMap<>(capacity);
-            Map<String, Map<String, String>> methodParameters = new HashMap<>(capacity);
+            Map<Integer, Integer> valueMap = new LinkedHashMap<>(capacity);
+            Map<String, String> extraParam = new LinkedHashMap<>(capacity);
+            Map<String, Map<String, String>> methodParameters = new LinkedHashMap<>(capacity);
 
             for (Map.Entry<String, String> entry : params.entrySet()) {
                 addParameter(keyBit, valueMap, extraParam, methodParameters, entry.getKey(), entry.getValue(), false);
@@ -1021,7 +1021,7 @@ public class URLParam {
             extraParam.put(key, value);
             String[] methodSplit = key.split("\\.", 2);
             if (methodSplit.length == 2) {
-                Map<String, String> methodMap = methodParameters.computeIfAbsent(methodSplit[1], (k) -> new HashMap<>());
+                Map<String, String> methodMap = methodParameters.computeIfAbsent(methodSplit[1], (k) -> new LinkedHashMap<>());
                 methodMap.put(methodSplit[0], value);
             }
         } else {

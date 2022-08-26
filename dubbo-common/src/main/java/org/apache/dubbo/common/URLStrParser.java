@@ -21,6 +21,7 @@ import org.apache.dubbo.common.url.component.URLItemCache;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.apache.dubbo.common.constants.CommonConstants.DEFAULT_KEY_PREFIX;
@@ -67,7 +68,7 @@ public final class URLStrParser {
         }
 
         TempBuf tempBuf = DECODE_TEMP_BUF.get();
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         int nameStart = from;
         int valueStart = -1;
         int i;
@@ -229,7 +230,7 @@ public final class URLStrParser {
         }
 
         TempBuf tempBuf = DECODE_TEMP_BUF.get();
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = new LinkedHashMap<>();
         int nameStart = from;
         int valueStart = -1;
         int i;

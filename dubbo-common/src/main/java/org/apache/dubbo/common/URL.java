@@ -135,7 +135,7 @@ class URL implements Serializable {
 
     protected URL() {
         this.urlAddress = null;
-        this.urlParam = URLParam.parse(new HashMap<>());
+        this.urlParam = URLParam.parse(new LinkedHashMap<>());
         this.attributes = null;
     }
 
@@ -145,7 +145,7 @@ class URL implements Serializable {
 
     public URL(URLAddress urlAddress, URLParam urlParam, Map<String, Object> attributes) {
         this.urlAddress = urlAddress;
-        this.urlParam = null == urlParam ? URLParam.parse(new HashMap<>()) : urlParam;
+        this.urlParam = null == urlParam ? URLParam.parse(new LinkedHashMap<>()) : urlParam;
         this.attributes = (attributes != null ? attributes.isEmpty() ? null : attributes : null);
     }
 
@@ -261,7 +261,7 @@ class URL implements Serializable {
         if (reserveParams == null || reserveParams.length == 0) {
             return result;
         }
-        Map<String, String> newMap = new HashMap<>(reserveParams.length);
+        Map<String, String> newMap = new LinkedHashMap<>(reserveParams.length);
         Map<String, String> oldMap = result.getParameters();
         for (String reserveParam : reserveParams) {
             String tmp = oldMap.get(reserveParam);
@@ -273,7 +273,7 @@ class URL implements Serializable {
     }
 
     public static URL valueOf(URL url, String[] reserveParams, String[] reserveParamPrefixes) {
-        Map<String, String> newMap = new HashMap<>();
+        Map<String, String> newMap = new LinkedHashMap<>();
         Map<String, String> oldMap = url.getParameters();
         if (reserveParamPrefixes != null && reserveParamPrefixes.length != 0) {
             for (Map.Entry<String, String> entry : oldMap.entrySet()) {
@@ -928,7 +928,7 @@ class URL implements Serializable {
     }
 
     private void updateCachedNumber(String method, String key, Number n) {
-        Map<String, Number> keyNumber = getMethodNumbers().computeIfAbsent(method, m -> new HashMap<>());
+        Map<String, Number> keyNumber = getMethodNumbers().computeIfAbsent(method, m -> new LinkedHashMap<>());
         keyNumber.put(key, n);
     }
 
@@ -1122,7 +1122,7 @@ class URL implements Serializable {
         if (pairs.length % 2 != 0) {
             throw new IllegalArgumentException("Map pairs can not be odd number.");
         }
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         int len = pairs.length / 2;
         for (int i = 0; i < len; i++) {
             map.put(pairs[2 * i], pairs[2 * i + 1]);
@@ -1184,7 +1184,7 @@ class URL implements Serializable {
     }
 
     public Map<String, String> toMap() {
-        Map<String, String> map = new HashMap<>(getParameters());
+        Map<String, String> map = new LinkedHashMap<>(getParameters());
         if (getProtocol() != null) {
             map.put(PROTOCOL_KEY, getProtocol());
         }
@@ -1554,7 +1554,7 @@ class URL implements Serializable {
     }
 
     public static void putMethodParameter(String method, String key, String value, Map<String, Map<String, String>> methodParameters) {
-        Map<String, String> subParameter = methodParameters.computeIfAbsent(method, k -> new HashMap<>());
+        Map<String, String> subParameter = methodParameters.computeIfAbsent(method, k -> new LinkedHashMap<>());
         subParameter.put(key, value);
     }
 
@@ -1648,7 +1648,7 @@ class URL implements Serializable {
 
     public URL putAttribute(String key, Object obj) {
         if (attributes == null) {
-            this.attributes = new HashMap<>();
+            this.attributes = new LinkedHashMap<>();
         }
         attributes.put(key, obj);
         return this;
